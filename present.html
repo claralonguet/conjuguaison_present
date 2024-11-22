@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Conjugaison</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #007bff; /* Fond bleu */
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .quiz-container {
+      width: 90%;
+      max-width: 600px;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .question {
+      margin-bottom: 20px;
+      font-size: 1.2em;
+    }
+    .options button {
+      display: block;
+      margin: 5px 0;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      background: #e0e0e0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .options button:hover {
+      background: #d0d0d0;
+    }
+    .options button.correct {
+      background: #a8e6a8;
+    }
+    .options button.wrong {
+      background: #f8a8a8;
+    }
+    input[type="text"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .next-button {
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .next-button:hover {
+      background: #0056b3;
+    }
+    .score {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div id="quiz">
+      <!-- Questions will appear here -->
+    </div>
+    <div id="score" class="score"></div>
+  </div>
+
+  <script>
+    const verbs = [
+  { infinitif: "aimer", conjugaisons: ["aime", "aimes", "aime", "aimons", "aimez", "aiment"] },
+  { infinitif: "manger", conjugaisons: ["mange", "manges", "mange", "mangeons", "mangez", "mangent"] },
+  { infinitif: "finir", conjugaisons: ["finis", "finis", "finit", "finissons", "finissez", "finissent"] },
+  { infinitif: "être", conjugaisons: ["suis", "es", "est", "sommes", "êtes", "sont"] },
+  { infinitif: "avoir", conjugaisons: ["ai", "as", "a", "avons", "avez", "ont"] },
+  { infinitif: "aller", conjugaisons: ["vais", "vas", "va", "allons", "allez", "vont"] },
+  { infinitif: "faire", conjugaisons: ["fais", "fais", "fait", "faisons", "faites", "font"] },
+  { infinitif: "voir", conjugaisons: ["vois", "vois", "voit", "voyons", "voyez", "voient"] },
+  { infinitif: "pouvoir", conjugaisons: ["peux", "peux", "peut", "pouvons", "pouvez", "peuvent"] },
+  { infinitif: "dire", conjugaisons: ["dis", "dis", "dit", "disons", "dites", "disent"] },
+  { infinitif: "savoir", conjugaisons: ["sais", "sais", "sait", "savons", "savez", "savent"] },
+  { infinitif: "venir", conjugaisons: ["viens", "viens", "vient", "venons", "venez", "viennent"] },
+  { infinitif: "prendre", conjugaisons: ["prends", "prends", "prend", "prenons", "prenez", "prennent"] },
+  { infinitif: "marcher", conjugaisons: ["marche", "marches", "marche", "marchons", "marchez", "marchent"] },
+  { infinitif: "lire", conjugaisons: ["lis", "lis", "lit", "lisons", "lisez", "lisent"] },
+  { infinitif: "écrire", conjugaisons: ["écris", "écris", "écrit", "écrivons", "écrivez", "écrivent"] },
+  { infinitif: "chanter", conjugaisons: ["chante", "chantes", "chante", "chantons", "chantez", "chantent"] },
+  { infinitif: "jouer", conjugaisons: ["joue", "joues", "joue", "jouons", "jouez", "jouent"] },
+  { infinitif: "étudier", conjugaisons: ["étudie", "étudies", "étudie", "étudions", "étudiez", "étudient"] },
+  { infinitif: "rire", conjugaisons: ["ris", "ris", "rit", "rions", "riez", "rient"] }
+    ];
+
+    let score = 0;
+    let currentQuestion = 0;
+    let mode = 'quiz'; // Modes: 'quiz' or 'exercise'
+
+    function generateQuestion() {
+      const quizDiv = document.getElementById('quiz');
+      quizDiv.innerHTML = ''; // Clear previous question
+
+      if (mode === 'quiz') {
+        if (currentQuestion >= 5) {
+          if (score < 3) {
+            alert(`Score : ${score}/5. Vous devez obtenir au moins 3 bonnes réponses pour avancer. Recommençons le quiz.`);
+            restartQuiz(); // Restart quiz
+          } else {
+            alert(`Félicitations ! Votre score est de ${score}/5. Passons à l'exercice suivant.`);
+            mode = 'exercise'; // Change mode to exercise
+            currentQuestion = 0;
+            generateQuestion();
+          }
+          return;
+        }
+
+        const verb = verbs[Math.floor(Math.random() * verbs.length)];
+        const pronouns = ["je", "tu", "il/elle/on", "nous", "vous", "ils/elles"];
+        const pronounIndex = Math.floor(Math.random() * pronouns.length);
+        const correctAnswer = verb.conjugaisons[pronounIndex];
+
+        const questionDiv = document.createElement('div');
+        questionDiv.classList.add('question');
+        questionDiv.innerText = `Conjuguez "${verb.infinitif}" pour "${pronouns[pronounIndex]}" :`;
+        quizDiv.appendChild(questionDiv);
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.classList.add('options');
+        const options = [correctAnswer];
+        while (options.length < 4) {
+          const randomVerb = verbs[Math.floor(Math.random() * verbs.length)];
+          const randomConjugation = randomVerb.conjugaisons[Math.floor(Math.random() * randomVerb.conjugaisons.length)];
+          if (!options.includes(randomConjugation)) {
+            options.push(randomConjugation);
+          }
+        }
+        options.sort(() => Math.random() - 0.5);
+
+        options.forEach(option => {
+          const button = document.createElement('button');
+          button.innerText = option;
+          button.onclick = () => {
+            if (option === correctAnswer) {
+              button.classList.add('correct');
+              score++;
+            } else {
+              button.classList.add('wrong');
+            }
+            setTimeout(() => {
+              currentQuestion++;
+              generateQuestion();
+            }, 1000);
+          };
+          optionsDiv.appendChild(button);
+        });
+        quizDiv.appendChild(optionsDiv);
+
+      } else if (mode === 'exercise') {
+        if (currentQuestion >= 5) {
+          alert(`Exercice terminé. Félicitations pour votre travail ! Vous serez maintenant redirigé vers la page de fin.`);
+          window.location.href = "fin.html"; // Redirect to the end page
+          return;
+        }
+
+        const verb = verbs[Math.floor(Math.random() * verbs.length)];
+        const pronouns = ["je", "tu", "il/elle/on", "nous", "vous", "ils/elles"];
+        const pronounIndex = Math.floor(Math.random() * pronouns.length);
+        const correctAnswer = verb.conjugaisons[pronounIndex];
+
+        const questionDiv = document.createElement('div');
+        questionDiv.classList.add('question');
+        questionDiv.innerText = `Écrivez la conjugaison correcte pour "${verb.infinitif}" avec "${pronouns[pronounIndex]}" :`;
+        quizDiv.appendChild(questionDiv);
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'Réponse ici';
+        quizDiv.appendChild(input);
+
+        const validateButton = document.createElement('button');
+        validateButton.classList.add('next-button');
+        validateButton.innerText = 'Valider';
+        
+        validateButton.onclick = () => {
+          checkAnswer(input, correctAnswer);
+        };
+
+        // Ajout de l'événement pour la touche "Entrée"
+        input.addEventListener('keydown', function(event) {
+          if (event.key === "Enter") {
+            checkAnswer(input, correctAnswer);
+          }
+        });
+
+        quizDiv.appendChild(validateButton);
+      }
+    }
+
+    // Fonction pour vérifier la réponse
+    function checkAnswer(input, correctAnswer) {
+      if (input.value.trim() === correctAnswer) {
+        alert('Bonne réponse !');
+        score++;
+      } else {
+        alert(`Faux. La bonne réponse était : ${correctAnswer}`);
+      }
+      currentQuestion++;
+      generateQuestion();
+    }
+
+    function restartQuiz() {
+      score = 0;
+      currentQuestion = 0;
+      mode = 'quiz';
+      generateQuestion();
+    }
+
+    generateQuestion();
+  </script>
+</body>
+</html>

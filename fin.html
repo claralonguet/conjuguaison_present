@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Félicitations !</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f7f7f7;
+    }
+    .congrats-container {
+      text-align: center;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .congrats-container h1 {
+      font-size: 2em;
+      color: #4caf50;
+    }
+    .congrats-container p {
+      font-size: 1.2em;
+      color: #333;
+    }
+    .video-link {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .video-link:hover {
+      background-color: #0056b3;
+    }
+    iframe {
+      display: none;
+      margin-top: 20px;
+      width: 560px;
+      height: 315px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="congrats-container">
+    <h1>Félicitations ! 🎉</h1>
+    <p>Vous avez terminé l'exercice avec succès. Bravo pour vos efforts !</p>
+    <a href="#" class="video-link" id="showVideo">Voir une vidéo de récompense</a>
+    <iframe id="video" src="https://www.youtube.com/watch?v=P33GsJ2AhLk&list=PLfA6APrqF6cpGehqgVlbtnV_fNoapWo6Y" allowfullscreen></iframe>
+  </div>
+
+  <script>
+    // Afficher la vidéo lorsque l'utilisateur clique sur le lien
+    document.getElementById('showVideo').addEventListener('click', function(event) {
+      event.preventDefault();
+      const video = document.getElementById('video');
+      video.style.display = 'block'; // Affiche la vidéo
+      this.style.display = 'none'; // Cache le lien
+    });
+  </script>
+</body>
+</html>
